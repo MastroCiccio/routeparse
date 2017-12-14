@@ -5,4 +5,8 @@
 (def r-parser
   (insta/parser "default-grammar.bnf" :auto-whitespace :standard))
 
-r-parser
+(r-parser "(defroutes thename
+                  (GET \"/path/of/uri\"
+                    [x]
+                    (println x)))")
+
