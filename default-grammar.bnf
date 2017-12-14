@@ -1,0 +1,26 @@
+HANDLER ::= <'('> <'defroutes'> HANDLER_NAME ROUTE+ <')'>
+
+HANDLER_NAME ::= COMMENT? NAME
+ROUTE ::= [COMMENT+] IGNORE? (<'('> METHOD PATH ARGS BODY+ <')'> | CONTEXT | IMPORT)
+
+METHOD ::= 'ANY' | 'POST' | 'GET'
+PATH ::= <'\"'> #'[\w\-:/\.]+' <'\"'>
+ARGS ::= [COMMENT+] (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)
+<BODY> ::= [COMMENT+] (ANYTHING | '(' BODY+ ')')
+<ANYTHING> ::= #'[^\(\)]*'
+
+SQUARED_ARGS ::= '[' (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)+ ']'
+CURLY_ARGS ::= '{' (PARAMETERS | CURLY_ARGS)+ '}'
+PARAMETERS ::= #'[\w\s:\-\?!]*'
+
+CONTEXT ::= <'('> <'context'> PATH ARGS BODY+ <')'>
+
+IMPORT ::= <[COMMENT+]> (NAME <'/'> NAME | NAME)
+
+NAME ::= #'[\w\-]+'
+
+COMMENT ::= START-C BODY-C
+START-C ::= ';' | ';;'
+BODY-C ::= #'.*\n'
+
+IGNORE ::= '#_'

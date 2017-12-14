@@ -1,6 +1,8 @@
-(ns routeparse.core)
+(ns routeparse.core
+  (:require [clojure.string :as st]
+            [instaparse.core :as insta]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(def r-parser
+  (insta/parser "default-grammar.bnf" :auto-whitespace :standard))
+
+r-parser
