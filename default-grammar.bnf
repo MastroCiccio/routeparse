@@ -6,7 +6,7 @@ ROUTE ::= <[COMMENT+]> IGNORE? (<'('> METHOD PATH ARGS <BODY+> <')'> | CONTEXT |
 METHOD ::= 'ANY' | 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD'
 PATH ::= <'\"'> #'[\w\-:/\.]+' <'\"'>
 ARGS ::= <[COMMENT+]> (#'[\w\-]' | SQUARED_ARGS | CURLY_ARGS)
-BODY ::= [COMMENT+] (ANYTHING | '(' <BODY+> ')')
+<BODY> ::= [COMMENT+] (ANYTHING | '(' <BODY+> ')')
 <ANYTHING> ::= #'[^\(\)]*'
 
 <SQUARED_ARGS> ::= '[' (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)+ ']'
