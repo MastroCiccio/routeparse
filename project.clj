@@ -1,9 +1,10 @@
 (defproject
   routeparse
-  "0.1.0-SNAPSHOT"
+  "0.1.0"
   :description "Utils to extract routes list from a Compojure handler"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [instaparse "1.4.8"]])
+                 [instaparse "1.4.8"]
+                 [compojure "1.6.0"]])

@@ -3,36 +3,37 @@
             [instaparse.core :as insta]
             [routeparse.utils :as utils]))
 
-(def r-parser
+(def rp-parser
   (insta/parser "default-grammar.bnf" :auto-whitespace :standard))
 
-(defn r-tranformation-map
+(defn- rp-tranformation-map
   [& {:as opts}]
   (let [context (get opts :context)
         nspace (get opts :nspace)]
     {:IGNORE (fn [_] "skipped")
      :METHOD identity
-     :PATH identity
+     :PATH #(-> (str context %)
+                (st/replace #"/:.*" ""))
      :ARGS str
-     :CONTEXT str
-     :ROUTE (fn [& args] (st/join " " args))
+     :CONTEXT (fn [path & handler]
+                (let [sym (symbol nspace (-> handler first st/trim))
+                      ns-path (utils/from-sym (namespace sym))]
+                  (insta/transform (rp-tranformation-map :context path)
+                                   (rp-parser (utils/handler-source ns-path sym)))
+
+                  ))
+     :ROUTE (fn [& args]
+              (if (map? (first args))
+                (first args)
+                (st/join " " args)))
      :HANDLER_NAME keyword
      :HANDLER (fn [name & routes] {name routes})
      }))
 
-(def example
-  (r-parser "(defroutes
-                thename
-                  (GET \"/path/of/uri\"
-                    [x y]
-                    (println x y))
+(def srcexample (utils/handler-source "routeparse/utils.clj" 'ex-routes))
+srcexample
 
-                  (PUT \"/path/of/uri\"
-                    [a b]
-                    ((keyword a) (map () [0 1 2])))
-
-                  (context \"/manage\" [] something)
-                  )"))
+(def example (rp-parser srcexample))
 example
 
-(insta/transform (r-tranformation-map) example)
+(insta/transform (rp-tranformation-map :nspace "routeparse.utils") example)

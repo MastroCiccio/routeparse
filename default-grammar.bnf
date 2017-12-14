@@ -13,7 +13,7 @@ ARGS ::= <[COMMENT+]> (#'[\w\-]' | SQUARED_ARGS | CURLY_ARGS)
 <CURLY_ARGS> ::= '{' (PARAMETERS | CURLY_ARGS)+ '}'
 <PARAMETERS> ::= #'[\w\s:\-\?!]*'
 
-CONTEXT ::= <'('> <'context'> PATH ARGS BODY+ <')'>
+CONTEXT ::= <'('> <'context'> PATH <ARGS> BODY+ <')'>
 
 IMPORT ::= <[COMMENT+]> (NAME <'/'> NAME | NAME)
 

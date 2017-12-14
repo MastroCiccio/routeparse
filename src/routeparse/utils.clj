@@ -1,14 +1,19 @@
 (ns routeparse.utils
   (:import (clojure.lang RT)
-           (java.io PushbackReader LineNumberReader InputStreamReader)))
+           (java.io PushbackReader LineNumberReader InputStreamReader))
+  (:require [compojure.core :refer [defroutes POST GET context]]))
 
-(defn- from-path
+(defn from-path
   [path]
   (symbol (clojure.string/replace
             (clojure.string/replace path #".clj" "")
             #"/" ".")))
 
-(defn my-source-fn
+(defn from-sym
+  [sym]
+  (-> sym name (clojure.string/replace #"\." "/") (str ".clj")))
+
+(defn handler-source
   "Custom version of source-fn in clojure.repl"
   [ns-path x]
   (when-let [v (ns-resolve (from-path ns-path) x)]
@@ -26,3 +31,20 @@
               (throw (IllegalStateException. "Unable to read source while *read-eval* is :unknown."))
               (read read-opts (PushbackReader. pbr)))
             (str text)))))))
+
+(defroutes
+  something
+  (GET "/some/thing" [] (+ 1 1))
+  (GET "/some/thing2" [] (+ 1 1)))
+
+(defroutes
+  ex-routes
+  (GET "/path/of/uri"
+       [x y]
+    (println x y))
+
+  (POST "/path/of/uri"
+       [a b]
+    ((keyword a) (map inc [0 1 2])))
+
+  (context "/manage" [] something))
