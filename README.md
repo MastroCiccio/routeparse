@@ -1,6 +1,6 @@
 # routeparse
 
-A Clojure library designed to extract the routes of a Ring handler.
+A Clojure library designed to extract the routes of a Compojure handler.
 
 ## Usage
 
