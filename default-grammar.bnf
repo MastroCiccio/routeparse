@@ -1,12 +1,12 @@
 HANDLER ::= <'('> <'defroutes'> HANDLER_NAME ROUTE+ <')'>
 
-HANDLER_NAME ::= COMMENT? NAME
-ROUTE ::= [COMMENT+] IGNORE? (<'('> METHOD PATH ARGS <BODY+> <')'> | CONTEXT | IMPORT)
+HANDLER_NAME ::= <COMMENT?> NAME
+ROUTE ::= <[COMMENT+]> IGNORE? (<'('> METHOD PATH ARGS <BODY+> <')'> | CONTEXT | IMPORT)
 
-METHOD ::= 'ANY' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'GET'
+METHOD ::= 'ANY' | 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD'
 PATH ::= <'\"'> #'[\w\-:/\.]+' <'\"'>
-ARGS ::= [COMMENT+] (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)
-<BODY> ::= [COMMENT+] (ANYTHING | '(' BODY+ ')')
+ARGS ::= <[COMMENT+]> (#'[\w\-]' | SQUARED_ARGS | CURLY_ARGS)
+BODY ::= [COMMENT+] (ANYTHING | '(' <BODY+> ')')
 <ANYTHING> ::= #'[^\(\)]*'
 
 <SQUARED_ARGS> ::= '[' (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)+ ']'
@@ -20,7 +20,7 @@ IMPORT ::= <[COMMENT+]> (NAME <'/'> NAME | NAME)
 <NAME> ::= #'[\w\-]+'
 
 COMMENT ::= START-C BODY-C
-START-C ::= ';' | ';;'
-BODY-C ::= #'.*\n'
+START-C ::= ';;' | ';'
+BODY-C ::= #'[^\n]*'
 
 IGNORE ::= '#_'

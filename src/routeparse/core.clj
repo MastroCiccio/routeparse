@@ -8,17 +8,26 @@
 (defn r-tranformation-map
   []
   (let []
-    {:METHOD identity
+    {:IGNORE (fn [_] "skipped")
+     :METHOD identity
      :PATH identity
      :ARGS str
      :ROUTE (fn [& args] (st/join " " args))
      :HANDLER_NAME keyword
-     :HANDLER (fn [name & routes] {name routes})}))
+     :HANDLER (fn [name & routes] {name routes})
+     }))
 
 (def example
-  (r-parser "(defroutes thename
+  (r-parser "(defroutes
+                thename
                   (GET \"/path/of/uri\"
                     [x y]
-                    (println x y)))"))
+                    (println x y))
+
+                  #_(PUT \"/path/of/uri\"
+                    [a b]
+                    ((keyword a) (map () [0 1 2])))
+                  )"))
+example
 
 (insta/transform (r-tranformation-map) example)
