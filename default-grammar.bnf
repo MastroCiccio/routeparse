@@ -3,14 +3,14 @@ HANDLER ::= <'('> <'defroutes'> HANDLER_NAME ROUTE+ <')'>
 HANDLER_NAME ::= COMMENT? NAME
 ROUTE ::= [COMMENT+] IGNORE? (<'('> METHOD PATH ARGS <BODY+> <')'> | CONTEXT | IMPORT)
 
-METHOD ::= 'ANY' | 'POST' | 'GET'
+METHOD ::= 'ANY' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'GET'
 PATH ::= <'\"'> #'[\w\-:/\.]+' <'\"'>
 ARGS ::= [COMMENT+] (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)
 <BODY> ::= [COMMENT+] (ANYTHING | '(' BODY+ ')')
 <ANYTHING> ::= #'[^\(\)]*'
 
-<SQUARED_ARGS> ::= <'['> (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)+ <']'>
-<CURLY_ARGS> ::= <'{'> (PARAMETERS | CURLY_ARGS)+ <'}'>
+<SQUARED_ARGS> ::= '[' (PARAMETERS | SQUARED_ARGS | CURLY_ARGS)+ ']'
+<CURLY_ARGS> ::= '{' (PARAMETERS | CURLY_ARGS)+ '}'
 <PARAMETERS> ::= #'[\w\s:\-\?!]*'
 
 CONTEXT ::= <'('> <'context'> PATH ARGS BODY+ <')'>
