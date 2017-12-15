@@ -7,14 +7,13 @@
 (def rp-parser
   (insta/parser "default-grammar.bnf" :auto-whitespace :standard))
 
-(defn recur-path
+(defn- recur-path
   [path]
   (let [pre (st/replace path #"^routeparse/" "")
         patt (re-find #"[^/]*routeparse/.+" pre)]
     (if (nil? patt)
       path
       (recur-path patt))))
-;;(recur-path "/home/francesco/Documenti/Projects/Clojure/routeparse/src/routeparse/exports.clj")
 
 (defn- rp-transformation-map
   [& {:as opts}]
@@ -35,7 +34,6 @@
                (let [sym (symbol (-> args last st/trim))
                      ns-res (:file (meta (ns-resolve 'routeparse.exports sym)))
                      ns-path (recur-path ns-res)]
-                 (println sym ns-path)
                  (insta/transform (rp-transformation-map)
                                   (rp-parser (utils/handler-source ns-path sym)))))
      :ROUTE (fn [& args]
@@ -53,9 +51,13 @@
      }))
 
 (def srcexample (utils/handler-source "routeparse/routes.clj" 'ex-routes))
-srcexample
 
 (def example (rp-parser srcexample))
-example
 
-(insta/transform (rp-transformation-map :nspace "routeparse.routes") example)
+(def res (insta/transform (rp-transformation-map :nspace "routeparse.routes") example))
+
+(defn parse
+  [path sym]
+  (let [src (utils/handler-source path sym)
+        tree (rp-parser src)]
+    (insta/transform (rp-transformation-map :nspace "routeparse.routes") tree)))
