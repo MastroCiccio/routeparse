@@ -1,7 +1,6 @@
 (ns routeparse.utils
   (:import (clojure.lang RT)
-           (java.io PushbackReader LineNumberReader InputStreamReader))
-  (:require [compojure.core :refer [defroutes POST GET context]]))
+           (java.io PushbackReader LineNumberReader InputStreamReader)))
 
 (defn from-path
   [path]
@@ -31,20 +30,3 @@
               (throw (IllegalStateException. "Unable to read source while *read-eval* is :unknown."))
               (read read-opts (PushbackReader. pbr)))
             (str text)))))))
-
-(defroutes
-  something
-  (GET "/some/thing" [] (+ 1 1))
-  (GET "/some/thing2" [] (+ 1 1)))
-
-(defroutes
-  ex-routes
-  (GET "/path/of/uri"
-       [x y]
-    (println x y))
-
-  (POST "/path/of/uri"
-       [a b]
-    ((keyword a) (map inc [0 1 2])))
-
-  (context "/manage" [] something))
