@@ -15,14 +15,20 @@
 (deftest core-test
   (testing "Testing parser with default grammar"
     (is (= (parse "routeparse/routes.clj" 'ex-routes)
-           []))
+           [:HANDLER
+            [:HANDLER_NAME "ex-routes"]
+            [:ROUTE [:METHOD "GET"] [:PATH "/path/of/uri"] [:ARGS "[" "x y" "]"]]
+            [:ROUTE [:METHOD "POST"] [:PATH "/path/of/uri"] [:ARGS "[" "a b" "]"]]
+            [:ROUTE [:CONTEXT [:PATH "/manage"] " something"]]
+            [:ROUTE [:IMPORT "exports" "ex-exports"]]]))
     (is (= (transform-with [:HANDLER
-                            [:HANDLER_NAME "ex-routes"]
-                            [:ROUTE [:METHOD "GET"] [:PATH "/path/of/uri"] [:ARGS "[" "x y" "]"]]
-                            [:ROUTE [:METHOD "POST"] [:PATH "/path/of/uri"] [:ARGS "[" "a b" "]"]]
-                            [:ROUTE [:CONTEXT [:PATH "/manage"] " something"]]
-                            [:ROUTE [:IMPORT "exports" "ex-exports"]]])
-           {})))
+                            [:HANDLER_NAME "only-routes"]
+                            [:ROUTE [:METHOD "GET"] [:PATH "/path/of/uri0"] [:ARGS "[" "x y" "]"]]
+                            [:ROUTE [:METHOD "POST"] [:PATH "/path/of/uri1"] [:ARGS "[" "a b" "]"]]
+                            [:ROUTE [:METHOD "PUT"] [:PATH "/path/of/uri2"] [:ARGS "[" "]"]]])
+           {:only-routes '("PUT /path/of/uri2 []"
+                            "POST /path/of/uri1 [a b]"
+                            "GET /path/of/uri0 [x y]")})))
   (testing "Testing default transform map"
     (is (= (parse-and-transform "routeparse/routes.clj" 'ex-routes)
            {:ex-routes '("GET /export1 []"

@@ -54,8 +54,6 @@
 
 (def example (rp-parser srcexample))
 
-(def res (insta/transform (rp-transformation-map :nspace "routeparse.routes") example))
-
 (defn parse
   [path sym]
   (let [src (utils/handler-source path sym)]
