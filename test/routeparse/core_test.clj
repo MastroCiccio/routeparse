@@ -5,6 +5,13 @@
             [routeparse.routes :refer :all]
             [routeparse.exports :refer :all]))
 
+(deftest utils-test
+  (testing "Testing from-path and from-sym"
+    (is (= (from-path "path/to/namespace.clj")
+           'path.to.namespace))
+    (is (= (from-sym 'path.to.namespace)
+           "path/to/namespace.clj"))))
+
 (deftest a-test
   (testing "a-test"
     (is (= (parse "routeparse/routes.clj" 'ex-routes)
