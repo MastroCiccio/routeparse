@@ -12,8 +12,7 @@
         nspace (get opts :nspace)]
     {:IGNORE (fn [_] "skipped")
      :METHOD identity
-     :PATH #(-> (str context %)
-                (st/replace #"/:.*" ""))
+     :PATH #(str context %)
      :ARGS str
      :CONTEXT (fn [path & handler]
                 (let [sym (symbol nspace (-> handler first st/trim))
@@ -27,7 +26,13 @@
                 (first args)
                 (st/join " " args)))
      :HANDLER_NAME keyword
-     :HANDLER (fn [name & routes] {name routes})
+     :HANDLER (fn [name & routes]
+                {name
+                 (reduce (fn [res item]
+                            (if (map? item)
+                              (apply into res (vals item))
+                              (cons item res)))
+                         () routes)})
      }))
 
 (def srcexample (utils/handler-source "routeparse/utils.clj" 'ex-routes))
