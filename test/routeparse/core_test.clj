@@ -12,9 +12,19 @@
     (is (= (from-sym 'path.to.namespace)
            "path/to/namespace.clj"))))
 
-(deftest a-test
-  (testing "a-test"
+(deftest core-test
+  (testing "Testing parser with default grammar"
     (is (= (parse "routeparse/routes.clj" 'ex-routes)
+           []))
+    (is (= (transform-with [:HANDLER
+                            [:HANDLER_NAME "ex-routes"]
+                            [:ROUTE [:METHOD "GET"] [:PATH "/path/of/uri"] [:ARGS "[" "x y" "]"]]
+                            [:ROUTE [:METHOD "POST"] [:PATH "/path/of/uri"] [:ARGS "[" "a b" "]"]]
+                            [:ROUTE [:CONTEXT [:PATH "/manage"] " something"]]
+                            [:ROUTE [:IMPORT "exports" "ex-exports"]]])
+           {})))
+  (testing "Testing default transform map"
+    (is (= (parse-and-transform "routeparse/routes.clj" 'ex-routes)
            {:ex-routes '("GET /export1 []"
                          "GET /manage/some/thing []"
                          "GET /manage/some/thing2 []"

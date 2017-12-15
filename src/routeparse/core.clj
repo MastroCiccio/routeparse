@@ -58,6 +58,15 @@
 
 (defn parse
   [path sym]
+  (let [src (utils/handler-source path sym)]
+    (insta/parse rp-parser src)))
+
+(defn transform-with
+  [tree & options]
+  (insta/transform (apply rp-transformation-map options) tree))
+
+(defn parse-and-transform
+  [path sym]
   (let [src (utils/handler-source path sym)
         tree (rp-parser src)]
     (insta/transform (rp-transformation-map :nspace "routeparse.routes") tree)))

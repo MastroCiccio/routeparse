@@ -5,7 +5,7 @@
 (defn from-path
   [path]
   (symbol (clojure.string/replace
-            (clojure.string/replace path #".clj" "")
+            (clojure.string/replace path #"\.clj" "")
             #"/" ".")))
 
 (defn from-sym
